@@ -10,13 +10,23 @@ import UIKit
 import Parse
 
 class ViewController: UIViewController {
-
+    
+    
     @IBOutlet weak var usernameLabel: UITextField!
     @IBOutlet weak var passwordLabel: UITextField!
     var ifLoggedInSuccessfully = "Hi";
 
+    let alertControllerInvalidUsername = UIAlertController(title: "Invalid username or password", message: "", preferredStyle: .alert)
+    let alertControllerAccountExists = UIAlertController(title: "Account already exists for this username", message: "", preferredStyle: .alert)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        let OKAction = UIAlertAction(title: "OK", style: .default) {
+            (action) in
+        }
+        alertControllerInvalidUsername.addAction(OKAction)
+        alertControllerAccountExists.addAction(OKAction)
+        
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -42,6 +52,7 @@ class ViewController: UIViewController {
         newUser.signUpInBackground { (success: Bool, error: Error?) in
             if let error = error {
                 print(error.localizedDescription)
+                self.present(self.alertControllerAccountExists, animated: true)
             } else {
                 print("User Registered successfully")
                 // manually segue to logged in view
@@ -60,6 +71,7 @@ class ViewController: UIViewController {
         
         PFUser.logInWithUsername(inBackground: username, password: password) { (user: PFUser?, error: Error?) in
             if let error = error {
+                self.present(self.alertControllerInvalidUsername, animated: true)
                 print("User log in failed: \(error.localizedDescription)")
             } else {
                 print("User logged in successfully")

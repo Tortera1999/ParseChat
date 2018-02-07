@@ -30,6 +30,8 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         ChatTableView.rowHeight = UITableViewAutomaticDimension
         ChatTableView.estimatedRowHeight = 50
+        ChatTableView.separatorStyle = .none;
+        
         
         Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.onTimer), userInfo: nil, repeats: true)
 
@@ -50,11 +52,13 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         let message = self.messages[indexPath.row]
         
-        cell.chatLabel.text = message["text"] as? String
+        let m = message["text"] as? String
+        
+        cell.chatLabel.text = "✉️: \(m!)"
         
         if let user = message["user"] as? String {
             // User found! update username label with username
-            cell.usernameLabel.text = user
+            cell.usernameLabel.text = "📱: \(user)"
         } else {
             // No user found, set default username
             cell.usernameLabel.text = "🤖"
@@ -95,10 +99,20 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     @IBAction func logout(_ sender: Any) {
+//        PFUser.logOut()
+//        self.dismiss(animated: true, completion: nil)
+//        self.performSegue(withIdentifier: "backToLogin", sender: nil)
+    
+        //NotificationCenter.default.post(name: NSNotification.Name("didLogout"), object: nil)
+        
+        
+        
         PFUser.logOut()
-        self.dismiss(animated: true, completion: nil)
-        self.performSegue(withIdentifier: "backToLogin", sender: nil)
-    }
+        print("User has been logged out")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let viewController = storyboard.instantiateInitialViewController()
+        present(viewController!, animated: true, completion: nil)
+           }
 
     /*
     // MARK: - Navigation
